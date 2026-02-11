@@ -3022,6 +3022,21 @@ body.tutorial-page{ overflow-x: hidden; }
   box-sizing: border-box;
 }
 
+/* === PATCH (2026-02-11): alinear títulos y precios entre tarjetas (móvil) === */
+@media (max-width: 900px){
+  /* Reservar espacio para 2 líneas de título (evita desalineación cuando una card tiene 1 línea) */
+  .carousel .card .body > h3,
+  .carousel .card .card-body > h3{
+    line-height: 1.15;
+    min-height: 2.30em; /* ~2 líneas */
+  }
+  /* Mantener el bloque de precio pegado al fondo para que quede alineado */
+  .carousel .card .body .price,
+  .carousel .card .card-body .price{
+    margin-top: auto;
+  }
+}
+
 /* Keep legacy renderer (.card-body) aligned with main styles (.body) */
 .card .card-body{
   padding: 12px;
