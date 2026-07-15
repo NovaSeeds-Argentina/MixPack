@@ -3181,3 +3181,37 @@ body.tutorial-page{ overflow-x: hidden; }
 .app-install-section .app-toast{background:transparent;box-shadow:none;padding:0;border-radius:0;}
 .app-install-section #appInstallImg{display:block;width:min(560px,92vw);height:auto;max-width:100%;}
 .site-footer{text-align:center;padding:8px 12px 22px;color:rgba(255,255,255,.55);font-size:12px;line-height:1.2;}
+
+
+/* Contenido de semillas por paquete */
+.pack-content{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:8px;
+  padding:7px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  border:1px solid rgba(255,193,7,.72);
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(255,193,7,.13), rgba(255,193,7,.06));
+  color:#fff;
+  font-size:.82rem;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:.015em;
+  text-align:center;
+  white-space:nowrap;
+}
+.pack-content__icon{
+  color:#ffc107;
+  font-size:.78em;
+  line-height:1;
+}
+@media (max-width:420px){
+  .pack-content{
+    padding:7px 8px;
+    font-size:.78rem;
+  }
+}

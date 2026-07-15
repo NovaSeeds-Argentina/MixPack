@@ -1,9 +1,9 @@
 
 const DATA_OVERRIDE = {
   "02Genext": {
-    "01": {"title":"Dealer Deal XXL","genetica":"Autofloreciente","oldPrice":"80.000","price":"65.000"},
-    "02": {"title":"Psycho XXL","genetica":"Autofloreciente","oldPrice":"80.000","price":"65.000"},
-    "03": {"title":"Auto Granel","genetica":"Autofloreciente","price":"35.000"}
+    "01": {"title":"Dealer Deal XXL","genetica":"Autofloreciente","oldPrice":"80.000","price":"65.000","pack":"Mix 12 Semillas"},
+    "02": {"title":"Psycho XXL","genetica":"Autofloreciente","oldPrice":"80.000","price":"65.000","pack":"Mix 12 Semillas"},
+    "03": {"title":"Auto Granel","genetica":"Autofloreciente","price":"35.000","pack":"3 Semillas"}
   },
   "01Genint": {
     "01": {"title":"Gen1","genetica":"Feminizada","price":"49.999"},
@@ -101,7 +101,7 @@ const body = document.createElement('div');
       meta.oldPrice && meta.price
         ? `<div class="price price--sale"><div class="price-old">$${meta.oldPrice}</div><div class="price-new">$${meta.price}</div></div>`
         : `<div class="price">${meta.price ? '$'+meta.price : 'Consultar'}</div>`
-    }`;
+    }${meta.pack ? `<div class="pack-content" aria-label="Contenido del paquete"><span class="pack-content__icon" aria-hidden="true">✦</span>${meta.pack}</div>` : ''}`;
 
     card.appendChild(heroDiv);
     card.appendChild(body);
