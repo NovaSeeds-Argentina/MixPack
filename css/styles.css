@@ -3210,13 +3210,25 @@ body.tutorial-page{ overflow-x: hidden; }
   line-height:1;
 }
 @media (max-width:420px){
+  /* Mantener las tarjetas anchas; la etiqueta ocupa todo el ancho interno. */
+  .carousel .card,
+  .carrusel .card,
+  .carousel .tarjeta,
+  .carrusel .tarjeta{
+    flex:0 0 calc((100% - 8px) / 2) !important;
+    max-width:calc((100% - 8px) / 2) !important;
+  }
   .pack-content{
-    width:calc(100% - 18px);
-    margin-left:auto;
-    margin-right:auto;
+    width:calc(100% + 24px);
+    margin-left:-12px;
+    margin-right:-12px;
+    margin-top:8px;
     padding:8px 12px;
     font-size:.76rem;
     gap:6px;
+    border-left-width:0;
+    border-right-width:0;
+    border-radius:0;
   }
 }
 
