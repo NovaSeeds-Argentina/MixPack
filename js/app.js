@@ -201,7 +201,7 @@ function buildAutoGranelFicha(){
   d.innerHTML = `
     <div class="ag-title-row">
       <h4 class="lb-ficha-title ag-title-main">Critical xxl AUTO GRANEL</h4>
-      <h4 class="lb-ficha-title ag-title-qty">x5 Semillas</h4>
+      <h4 class="lb-ficha-title ag-title-qty">x3 Semillas</h4>
     </div>
     <p class="ag-desc">Semillas a Granel de Automáticas Critical XXL Autofloreciente.<br><em>*las semillas se entregan en Tubos Eppendorf de 1.5 ml.</em></p>`;
   return d;
@@ -311,7 +311,7 @@ try{
       } else if(folder === '02Genext' && id === '02'){
         msg = 'Hola NOVA Seeds, quisiera comprar Psycho XXL AutoMix (x12 semillas). ¿Hay stock disponible?';
       } else if(folder === '02Genext' && id === '03'){
-        msg = 'Hola NOVA Seeds, quisiera comprar x5 AUTOGRANEL (Critical XXL Automáticas). ¿Cómo coordinamos?';
+        msg = 'Hola NOVA Seeds, quisiera comprar x3 AUTOGRANEL (Critical XXL Automáticas). ¿Cómo coordinamos?';
       } else {
         msg = 'Hola NOVA Seeds, quisiera realizar una compra. ¿Me podrían ayudar?';
       }
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function(){
     DATA_FICHAS["02Genext"]["03"] = [
       {
         titulo: "Critical xxl AUTO GRANEL",
-        qty: "x5 Semillas"
+        qty: "x3 Semillas"
       }
     ];
   }catch(e){}
