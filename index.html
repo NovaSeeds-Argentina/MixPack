@@ -57,27 +57,26 @@
 	<section class="promo-strip promo-rotation" aria-label="Novedades">
   <div class="promo-rotation__stage">
     <div class="promo-rotation__panel promo-rotation__offer is-active" id="promo-llevate" aria-hidden="false">
-	  <div class="promo-strip__visual">
-	  <img
-	    class="promo-strip__img"
-	    src="img/f1.webp"
-	    alt="Promoción AutoMix"
-	    loading="lazy"
-	    decoding="async"
-	    width="1425"
-	    height="505"/>
-	  </div>
-	  <div class="promo-strip__copy" aria-label="Detalle de promoción">
-	    <span class="promo-strip__copy-text">Comprando cualquier AutoMix</span>
-	    <span class="promo-strip__copy-text">llevate</span>
-	    <span class="promo-strip__copy-x3">x3</span>
-	    <span class="promo-strip__copy-auto">AUTOGRANEL</span>
-	  </div>
-
-	
+      <div class="offer-creative" aria-label="Comprando cualquier AutoMix, llevate x3 AutoGranel gratis">
+        <div class="offer-creative__light" aria-hidden="true"></div>
+        <div class="offer-creative__streaks" aria-hidden="true"></div>
+        <div class="offer-creative__sparks" aria-hidden="true"></div>
+        <div class="offer-creative__shine" aria-hidden="true"></div>
+        <div class="offer-creative__content">
+          <div class="offer-creative__intro">
+            <span class="offer-creative__eyebrow">Comprando cualquier</span>
+            <strong class="offer-creative__brand">AutoMix</strong>
+          </div>
+          <div class="offer-creative__hero">
+            <span class="offer-creative__verb">Llevate</span>
+            <div class="offer-creative__headline"><strong class="offer-creative__number">x3</strong><strong class="offer-creative__free">Gratis</strong></div>
+          </div>
+          <div class="offer-creative__footer"><span>AutoGranel</span></div>
+        </div>
+      </div>
     </div>
     <div class="promo-rotation__panel redline-panel" id="promo-redline" aria-hidden="true" inert>
-      <div class="redline-panel__heading"><span>PRÓXIMAMENTE</span><strong>RED LINE</strong><span class="redline-panel__sub">AutoMix</span></div>
+      <div class="redline-panel__heading"><span>PRÓXIMAMENTE</span><strong>RED LINE</strong><span class="redline-panel__sub">2027</span></div>
       <div class="redline-panel__gallery" aria-label="Imágenes de Red Line">
         <img src="img/red-line/portada.webp" alt="Red Line AutoMix, portada" width="800" height="800" class="is-current" data-red-image="0" decoding="async"/>
         <img src="img/red-line/logo.webp" alt="Identidad visual Red Line" width="554" height="554" data-red-image="1" decoding="async"/>
@@ -91,11 +90,6 @@
         <button type="button" data-red-step="1" aria-label="Imagen siguiente">›</button>
       </div>
     </div>
-  </div>
-  <div class="promo-rotation__controls" aria-label="Elegir anuncio">
-    <button type="button" data-promo-select="0" aria-pressed="true">Llevate 3</button>
-    <button type="button" data-promo-select="1" aria-pressed="false">Red Line</button>
-    <button type="button" data-promo-pause aria-pressed="false" aria-label="Pausar rotación">Ⅱ</button>
   </div>
 </section>
 
@@ -142,8 +136,14 @@
 
 <section class="shipping-section" id="envios">
   <h2 class="shipping-title">Envíos</h2>
-  <img class="shipping-img" src="img/andreani.png" alt="Andreani" loading="lazy" decoding="async" width="1458" height="485"/>
-  <img class="shipping-img" src="img/correo-argentino.jpg" alt="Correo Argentino - Envíos a todo el país" loading="lazy" decoding="async" width="803" height="221"/>
+  <div class="shipping-carriers">
+    <div class="shipping-carrier shipping-carrier--andreani">
+      <img class="shipping-img" src="img/andreani.png" alt="Andreani" loading="lazy" decoding="async" width="1458" height="485"/>
+    </div>
+    <div class="shipping-carrier shipping-carrier--correo">
+      <img class="shipping-img" src="img/correo-argentino.jpg" alt="Correo Argentino - Envíos a todo el país" loading="lazy" decoding="async" width="803" height="221"/>
+    </div>
+  </div>
 </section>
 
 <div class="section-divider" role="separator" aria-hidden="true"></div>

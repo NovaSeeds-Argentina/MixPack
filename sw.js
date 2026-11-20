@@ -1,5 +1,5 @@
 /* NOVA Seeds — PWA con caché acotada al sitio y navegación sin conexión. */
-const CACHE_NAME = 'novaseeds-shell-2026-11-v15';
+const CACHE_NAME = 'novaseeds-shell-2026-11-v21';
 const APP_SHELL = [
   "./",
   "./index.html",

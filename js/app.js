@@ -1645,18 +1645,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-// v15: dos paneles en un espacio fijo; controles manuales y reloj único.
+// v16: alternancia automática sin controles de selección de anuncio.
 (function () {
   function initPromoRotation() {
     const root = document.querySelector('.promo-rotation');
     if (!root) return;
     const panels = [...root.querySelectorAll('.promo-rotation__panel')];
-    const tabs = [...root.querySelectorAll('[data-promo-select]')];
     const images = [...root.querySelectorAll('[data-red-image]')];
     const dots = [...root.querySelectorAll('[data-red-select]')];
-    const pause = root.querySelector('[data-promo-pause]');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let active = 0, slide = 0, visible = false, stopped = reduced.matches;
+    let active = 0, slide = 0, visible = false;
     let elapsed = 0, last = 0, frame = 0;
     const duration = [4400, 8400];
     function setImage(index) {
@@ -1665,7 +1663,6 @@ document.addEventListener('DOMContentLoaded', function(){
       dots.forEach((dot, i) => dot.setAttribute('aria-pressed', String(i === slide)));
     }
     function show(index) {
-      if (panels[active].contains(document.activeElement) && index !== active) tabs[index].focus({preventScroll:true});
       active = index; elapsed = 0;
       if (index === 1) setImage(0);
       panels.forEach((panel, i) => {
@@ -1673,12 +1670,13 @@ document.addEventListener('DOMContentLoaded', function(){
         panel.setAttribute('aria-hidden', String(i !== active));
         panel.inert = i !== active;
       });
-      tabs.forEach((tab, i) => tab.setAttribute('aria-pressed', String(i === active)));
-      root.classList.toggle('is-in-view', visible && index === 0 && !stopped);
+      root.classList.toggle('is-in-view', visible && index === 0 && !reduced.matches);
+      root.classList.toggle('is-redline-in-view', visible && index === 1 && !reduced.matches && !document.hidden);
     }
     function tick(now) {
       frame = 0;
-      if (!visible || stopped || document.hidden) { last = 0; return; }
+      if (!visible || document.hidden) { last = 0; return; }
+      if (root.contains(document.activeElement) && document.activeElement.matches(':focus-visible')) { last = 0; frame = requestAnimationFrame(tick); return; }
       if (last) elapsed += Math.min(now - last, 100);
       last = now;
       if (elapsed >= duration[active]) show(1 - active);
@@ -1686,20 +1684,16 @@ document.addEventListener('DOMContentLoaded', function(){
       frame = requestAnimationFrame(tick);
     }
     function sync() {
-      root.classList.toggle('is-in-view', visible && active === 0 && !stopped && !document.hidden);
-      pause.setAttribute('aria-pressed', String(stopped));
-      pause.setAttribute('aria-label', stopped ? 'Reanudar rotación' : 'Pausar rotación');
-      pause.textContent = stopped ? '▶' : 'Ⅱ';
+      root.classList.toggle('is-in-view', visible && active === 0 && !reduced.matches && !document.hidden);
+      root.classList.toggle('is-redline-in-view', visible && active === 1 && !reduced.matches && !document.hidden);
       if (frame) cancelAnimationFrame(frame);
       frame = 0; last = 0;
-      if (visible && !stopped && !document.hidden) frame = requestAnimationFrame(tick);
+      if (visible && !document.hidden) frame = requestAnimationFrame(tick);
     }
     function manualImage(i) { setImage(i); elapsed = slide * 2800; last = 0; }
-    tabs.forEach((tab, i) => tab.addEventListener('click', () => { show(i); sync(); }));
     dots.forEach((dot, i) => dot.addEventListener('click', () => manualImage(i)));
     root.querySelectorAll('[data-red-step]').forEach(btn => btn.addEventListener('click', () => manualImage(slide + Number(btn.dataset.redStep))));
-    pause.addEventListener('click', () => { stopped = !stopped; sync(); });
-    reduced.addEventListener('change', e => { stopped = e.matches; sync(); });
+    reduced.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     let startX = null, startY = null;
     const gallery = root.querySelector('.redline-panel__gallery');
