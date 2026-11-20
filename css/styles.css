@@ -3820,24 +3820,24 @@ body.theme-dark { margin: 0; background: #000; font-family: var(--font-ui); }
 
 
 /* v21 — Llevate 3: composición por capas, sin texto rasterizado. */
-.home-page .promo-rotation__offer { background: #090302; }
+.home-page .promo-rotation__offer { background: #050505; }
 .offer-creative {
   position: relative; isolation: isolate; overflow: hidden;
   display: grid; place-items: center; flex: 1 0 auto;
   min-width: 0; box-sizing: border-box; container-type: inline-size;
-  padding: 20px 12px; border: 1px solid #722c17; border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 60%, #4e1709 0%, #1e0906 42%, #080303 78%);
-  box-shadow: inset 0 0 28px #e94c0c1a;
+  padding: 20px 12px; border: 1px solid #522417; border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 60%, #271009 0%, #100706 43%, #050505 78%);
+  box-shadow: inset 0 0 28px #e94c0c0e;
 }
 .offer-creative__light, .offer-creative__streaks, .offer-creative__sparks, .offer-creative__shine {
   position: absolute; inset: 0; pointer-events: none; z-index: -1;
 }
 .offer-creative__light {
-  background: radial-gradient(ellipse at 50% 60%, #ff681c66, #e81c0922 36%, transparent 68%);
+  background: radial-gradient(ellipse at 50% 60%, #ff681c2b, #e81c0912 36%, transparent 68%);
   transform: scale(1.1);
 }
 .offer-creative__streaks {
-  inset: -25%; opacity: .72;
+  inset: -25%; opacity: .40;
   background:
     linear-gradient(159deg, transparent 31%, #a7280a22 31.3%, #ff421b88 31.6%, transparent 32.2%),
     linear-gradient(159deg, transparent 42%, #ff7c2138 42.2%, #ffc471aa 42.45%, transparent 42.85%),
@@ -3845,7 +3845,7 @@ body.theme-dark { margin: 0; background: #000; font-family: var(--font-ui); }
     linear-gradient(159deg, transparent 72%, #ff621888 72.1%, transparent 72.5%);
 }
 .offer-creative__sparks {
-  inset: -15%; opacity: .65;
+  inset: -15%; opacity: .42;
   background-image: radial-gradient(ellipse, #ffb45a 0 1px, transparent 2px), radial-gradient(ellipse, #fa3f16 0 1px, transparent 2px), radial-gradient(ellipse, #ffebaf 0 1px, transparent 2px);
   background-size: 113px 79px, 73px 107px, 167px 131px;
   background-position: 11px 23px, 29px 8px, 46px 47px;
@@ -3889,25 +3889,55 @@ body.theme-dark { margin: 0; background: #000; font-family: var(--font-ui); }
 .offer-creative__footer::before, .offer-creative__footer::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, transparent, #ff632e); }
 .offer-creative__footer::after { transform: scaleX(-1); }
 .offer-creative__footer span { color: #ffb970; font-size: clamp(13px, 3cqi, 20px); text-transform: uppercase; font-weight: 850; letter-spacing: .12em; }
+/* v22 — dos bloques de texto con entradas independientes. */
+.offer-creative__reward {
+  display: grid; justify-items: center; width: 100%; min-width: 0;
+  gap: clamp(12px, 2.4cqi, 24px);
+}
 @media (prefers-reduced-motion: no-preference) {
-  .promo-rotation.is-in-view .offer-creative__intro { animation: novaOfferIntro .35s cubic-bezier(.15,.9,.28,1) both; }
-  .promo-rotation.is-in-view .offer-creative__verb { animation: novaOfferIntro .32s .07s both; }
-  .promo-rotation.is-in-view .offer-creative__number { animation: novaOfferNumber 4.4s both; }
-  .promo-rotation.is-in-view .offer-creative__free { animation: novaOfferFree .42s .12s cubic-bezier(.15,.85,.3,1) both; }
-  .promo-rotation.is-in-view .offer-creative__footer { animation: novaOfferFooter .36s .24s both; }
+  .promo-rotation.is-in-view .offer-creative__eyebrow { animation: novaIntroLabel .27s .08s cubic-bezier(.16,.85,.25,1) both; }
+  .promo-rotation.is-in-view .offer-creative__brand { animation: novaIntroBrand .42s .19s cubic-bezier(.18,.85,.3,1) both; }
+  .promo-rotation.is-in-view .offer-creative__verb { animation: novaRewardVerb .26s .72s ease-out both; }
+  .promo-rotation.is-in-view .offer-creative__number { animation: novaRewardNumber 3.46s .94s both; }
+  .promo-rotation.is-in-view .offer-creative__free { animation: novaRewardFree .38s 1.06s cubic-bezier(.16,.85,.28,1) both; }
+  .promo-rotation.is-in-view .offer-creative__footer { animation: novaRewardFooter .32s 1.30s ease-out both; }
   .promo-rotation.is-in-view .offer-creative__light { animation: novaOfferLight 2.2s ease-in-out infinite alternate; }
   .promo-rotation.is-in-view .offer-creative__streaks { animation: novaOfferStreaks 4.4s ease-in-out both; }
   .promo-rotation.is-in-view .offer-creative__sparks { animation: novaOfferSparks 5s linear infinite; }
   .promo-rotation.is-in-view .offer-creative__shine { animation: novaOfferShine 4.4s ease-in-out both; }
 }
-@keyframes novaOfferIntro { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes novaOfferFree { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes novaOfferFooter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes novaOfferNumber { 0% { opacity: 0; transform: scale(.7) rotate(-6deg); } 7% { opacity: 1; transform: scale(1.10); } 12%, 40%, 52%, 76%, 88%, 100% { opacity: 1; transform: scale(1); } 46%, 82% { transform: scale(1.07); } }
+@keyframes novaIntroLabel {
+  from { opacity: 0; transform: translateX(-20px); letter-spacing: .22em; }
+  to { opacity: 1; transform: translateX(0); letter-spacing: .13em; }
+}
+@keyframes novaIntroBrand {
+  0% { opacity: 0; transform: translateX(32px) scale(.94); }
+  68% { opacity: 1; transform: translateX(-3px) scale(1.035); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes novaRewardVerb {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes novaRewardNumber {
+  0% { opacity: 0; transform: scale(.66) rotate(-8deg); }
+  6% { opacity: 1; transform: scale(1.11) rotate(2deg); }
+  12%, 44%, 59%, 100% { opacity: 1; transform: scale(1) rotate(0); }
+  51% { transform: scale(1.075); }
+}
+@keyframes novaRewardFree {
+  0% { opacity: 0; transform: translateX(26px); }
+  75% { opacity: 1; transform: translateX(-3px); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes novaRewardFooter {
+  from { opacity: 0; transform: translateY(9px) scaleX(.88); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes novaOfferLight { from { opacity: .55; transform: translateX(-8%) scale(1.08); } to { opacity: 1; transform: translateX(8%) scale(1.2); } }
 @keyframes novaOfferStreaks { 0% { transform: translateX(-9%); } 100% { transform: translateX(9%); } }
 @keyframes novaOfferSparks { from { transform: translate(0, 0); } to { transform: translate(24px, -32px); } }
-@keyframes novaOfferShine { 0%, 32% { opacity: 0; transform: translateX(-115%); } 39% { opacity: 1; } 56%, 100% { opacity: 0; transform: translateX(115%); } }
+@keyframes novaOfferShine { 0%, 32% { opacity: 0; transform: translateX(-115%); } 39% { opacity: .7; } 56%, 100% { opacity: 0; transform: translateX(115%); } }
 @media (max-width: 600px) {
   .offer-creative__content { gap: clamp(14px, 4.6cqi, 27px); }
   .offer-creative__eyebrow { font-size: clamp(11px, 3.3cqi, 17px); }
@@ -3916,4 +3946,41 @@ body.theme-dark { margin: 0; background: #000; font-family: var(--font-ui); }
   .offer-creative__number { font-size: clamp(72px, 25cqi, 146px); }
   .offer-creative__free { font-size: clamp(40px, 14cqi, 83px); }
   .offer-creative__footer span { font-size: clamp(13px, 3.8cqi, 20px); }
+}
+
+/* v23 — superficie negra continua, sin marco; luz difuminada en los bordes. */
+.home-page .promo-rotation__offer { background: #000; }
+.offer-creative {
+  border-color: transparent;
+  border-radius: 0;
+  background: #000;
+  box-shadow: none;
+}
+.offer-creative__atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  isolation: isolate;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 55%, #180a04 0%, #080302 46%, #000 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, #000c 45%, #0005 62%, transparent 72%);
+  mask-image: radial-gradient(ellipse at center, #000 25%, #000c 45%, #0005 62%, transparent 72%);
+}
+.offer-creative__light {
+  background: radial-gradient(ellipse at 50% 57%, #ff681c19, #e81c090a 35%, transparent 63%);
+}
+.offer-creative__streaks { opacity: .26; }
+.offer-creative__sparks { opacity: .34; }
+
+/* v24 — transición breve entre dos presentaciones consecutivas. */
+@media (prefers-reduced-motion: no-preference) {
+  .promo-rotation .offer-creative__content {
+    opacity: 1;
+    transition: opacity .16s ease-out;
+  }
+  .promo-rotation.is-replaying .offer-creative__content {
+    opacity: 0;
+    transition: opacity .20s ease-in;
+  }
 }

@@ -1645,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-// v16: alternancia automática sin controles de selección de anuncio.
+// v25: dos apariciones consecutivas de 7 s del primer panel, luego el segundo.
 (function () {
   function initPromoRotation() {
     const root = document.querySelector('.promo-rotation');
@@ -1654,15 +1654,24 @@ document.addEventListener('DOMContentLoaded', function(){
     const images = [...root.querySelectorAll('[data-red-image]')];
     const dots = [...root.querySelectorAll('[data-red-select]')];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let active = 0, slide = 0, visible = false;
+    let active = 0, phase = 0, slide = 0, visible = false;
     let elapsed = 0, last = 0, frame = 0;
-    const duration = [4400, 8400];
+    const sequence = [{panel:0, time:7000}, {panel:0, time:7000}, {panel:1, time:5000}];
+    const replayExit = 220;
+    const imageDuration = sequence[2].time / Math.max(1, images.length);
     function setImage(index) {
       slide = (index + images.length) % images.length;
       images.forEach((im, i) => { im.classList.toggle('is-current', i === slide); });
       dots.forEach((dot, i) => dot.setAttribute('aria-pressed', String(i === slide)));
     }
     function show(index) {
+      const replay = active === 0 && index === 0 && phase === 1;
+      if (replay) {
+        root.classList.remove('is-in-view');
+        // Flush styles so both independent text animations start again.
+        void root.offsetWidth;
+      }
+      root.classList.remove('is-replaying');
       active = index; elapsed = 0;
       if (index === 1) setImage(0);
       panels.forEach((panel, i) => {
@@ -1679,18 +1688,25 @@ document.addEventListener('DOMContentLoaded', function(){
       if (root.contains(document.activeElement) && document.activeElement.matches(':focus-visible')) { last = 0; frame = requestAnimationFrame(tick); return; }
       if (last) elapsed += Math.min(now - last, 100);
       last = now;
-      if (elapsed >= duration[active]) show(1 - active);
-      else if (active === 1) setImage(Math.min(2, Math.floor(elapsed / 2800)));
+      if (elapsed >= sequence[phase].time) {
+        phase = (phase + 1) % sequence.length;
+        show(sequence[phase].panel);
+      } else if (active === 1) {
+        setImage(Math.min(images.length - 1, Math.floor(elapsed / imageDuration)));
+      } else if (phase === 0 && elapsed >= sequence[phase].time - replayExit && !reduced.matches) {
+        root.classList.add('is-replaying');
+      }
       frame = requestAnimationFrame(tick);
     }
     function sync() {
+      root.classList.toggle('is-replaying', visible && !document.hidden && !reduced.matches && phase === 0 && elapsed >= sequence[0].time - replayExit);
       root.classList.toggle('is-in-view', visible && active === 0 && !reduced.matches && !document.hidden);
       root.classList.toggle('is-redline-in-view', visible && active === 1 && !reduced.matches && !document.hidden);
       if (frame) cancelAnimationFrame(frame);
       frame = 0; last = 0;
       if (visible && !document.hidden) frame = requestAnimationFrame(tick);
     }
-    function manualImage(i) { setImage(i); elapsed = slide * 2800; last = 0; }
+    function manualImage(i) { setImage(i); elapsed = slide * imageDuration; last = 0; }
     dots.forEach((dot, i) => dot.addEventListener('click', () => manualImage(i)));
     root.querySelectorAll('[data-red-step]').forEach(btn => btn.addEventListener('click', () => manualImage(slide + Number(btn.dataset.redStep))));
     reduced.addEventListener('change', sync);
