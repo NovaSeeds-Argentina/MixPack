@@ -1,34 +1,8 @@
 (function(){
-  // Registrar Service Worker para experiencia tipo "app" (PWA)
-  if('serviceWorker' in navigator){
-    // En GitHub Pages (project site) la ruta suele ser /WebSem/
-    // Intentamos primero con scope absoluto y, si falla, con ruta relativa.
-    var regPromise = null;
-    try{
-      regPromise = navigator.serviceWorker.register('/WebSem/sw.js', { scope: '/WebSem/' })
-        .catch(function(){ return navigator.serviceWorker.register('./sw.js'); })
-        .catch(function(){});
-    }catch(e){
-      try{ regPromise = navigator.serviceWorker.register('./sw.js').catch(function(){}); }catch(e2){}
-    }
-
-    // En algunos Android/Chromium el instalador no aparece hasta que el SW controla la página.
-    // Hacemos un "reload una sola vez" para que quede controlada sin loops.
-    try{
-      if(regPromise && navigator.serviceWorker.ready){
-        regPromise.then(function(){
-          navigator.serviceWorker.ready.then(function(reg){
-            try{ reg.update(); }catch(e){}
-            try{
-              if(!navigator.serviceWorker.controller && !sessionStorage.getItem('pwa_sw_reloaded')){
-                sessionStorage.setItem('pwa_sw_reloaded','1');
-                location.reload();
-              }
-            }catch(e){}
-          }).catch(function(){});
-        }).catch(function(){});
-      }
-    }catch(e){}
+  // Rutas relativas: funciona en GitHub Pages y en la raíz de cualquier sitio.
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    navigator.serviceWorker.register('./sw.js', {scope: './'})
+      .catch(error => console.warn('No se pudo registrar la PWA:', error));
   }
 
   // Instalación (PWA) - Android/Chromium permite prompt mediante beforeinstallprompt

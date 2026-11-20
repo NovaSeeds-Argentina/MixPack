@@ -8,9 +8,8 @@
 <meta content="Semillas de colección en blister. Variedades autoflorecientes. Consultas y pedidos por WhatsApp. Envíos a todo el país." name="description"/>
 <title>NOVA Seeds - Semillas De Colección</title>
 <link href="css/styles.css" rel="stylesheet"/>
-<link as="image" fetchpriority="high" href="img/logo.png" rel="preload"/>
-<link href="manifest.json" rel="manifest"/>
-<link href="manifest.webmanifest" rel="manifest" media="(max-width:0px)"/>
+<link as="image" fetchpriority="high" href="img/logo.webp" rel="preload"/>
+<link href="manifest.webmanifest" rel="manifest"/>
 <link href="img/icon-192.png" rel="apple-touch-icon"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="yes" name="mobile-web-app-capable"/>
@@ -32,15 +31,15 @@
 <meta property="og:image" content="https://novaseeds-argentina.github.io/MixPack/img/what.jpg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:type" content="image/png"/>
-<meta property="og:image:alt" content="Banner de ejemplo Open Graph"/>
+<meta property="og:image:type" content="image/jpeg"/>
+<meta property="og:image:alt" content="NOVA Seeds"/>
 </head>
 <body class="theme-dark home-page">
 <!-- Banner superior -->
 <header class="site-header">
 <div class="header-inner">
-<img alt="Logo de NOVA Seeds" class="site-logo" decoding="async" fetchpriority="high" height="600" onerror="this.style.display='none'" src="img/logo.png" width="900"/>
-<img alt="BSF MixPack" class="site-logo-secondary" decoding="async" loading="eager" onerror="this.style.display='none'" src="img/bsf-mixpack.png" width="360" height="145" style="width:92vw;max-width:360px;height:auto;display:block;margin:0 auto 10px;"/>
+<img alt="Logo de NOVA Seeds" class="site-logo" decoding="async" fetchpriority="high" height="854" onerror="this.style.display='none'" src="img/logo.webp" width="1210"/>
+<img alt="BSF MixPack" class="site-logo-secondary" decoding="async" loading="eager" onerror="this.style.display='none'" src="img/bsf-mixpack.webp" width="1361" height="372" style="width:92vw;max-width:360px;height:auto;display:block;margin:0 auto 10px;"/>
 </div>
 </header>
 <main>
@@ -55,15 +54,19 @@
 <div class="section-divider" role="separator" aria-hidden="true"></div>
 
 	<!-- Promo (entre carrusel y guía) -->
-	<section class="promo-strip" aria-label="Promoción AutoMix">
+	<section class="promo-strip promo-rotation" aria-label="Novedades">
+  <div class="promo-rotation__stage">
+    <div class="promo-rotation__panel promo-rotation__offer is-active" id="promo-llevate" aria-hidden="false">
+	  <div class="promo-strip__visual">
 	  <img
 	    class="promo-strip__img"
-	    src="img/f1.png"
+	    src="img/f1.webp"
 	    alt="Promoción AutoMix"
 	    loading="lazy"
 	    decoding="async"
-	    width="1536"
-	    height="384"/>
+	    width="1425"
+	    height="505"/>
+	  </div>
 	  <div class="promo-strip__copy" aria-label="Detalle de promoción">
 	    <span class="promo-strip__copy-text">Comprando cualquier AutoMix</span>
 	    <span class="promo-strip__copy-text">llevate</span>
@@ -71,7 +74,30 @@
 	    <span class="promo-strip__copy-auto">AUTOGRANEL</span>
 	  </div>
 
-	</section>
+	
+    </div>
+    <div class="promo-rotation__panel redline-panel" id="promo-redline" aria-hidden="true" inert>
+      <div class="redline-panel__heading"><span>PRÓXIMAMENTE</span><strong>RED LINE</strong><span class="redline-panel__sub">AutoMix</span></div>
+      <div class="redline-panel__gallery" aria-label="Imágenes de Red Line">
+        <img src="img/red-line/portada.webp" alt="Red Line AutoMix, portada" width="800" height="800" class="is-current" data-red-image="0" decoding="async"/>
+        <img src="img/red-line/logo.webp" alt="Identidad visual Red Line" width="554" height="554" data-red-image="1" decoding="async"/>
+        <img src="img/red-line/detalle.webp" alt="Detalle del envase Red Line" width="1024" height="1100" data-red-image="2" decoding="async"/>
+      </div>
+      <div class="redline-panel__nav" aria-label="Cambiar imagen">
+        <button type="button" data-red-step="-1" aria-label="Imagen anterior">‹</button>
+        <button type="button" data-red-select="0" aria-label="Portada" aria-pressed="true"></button>
+        <button type="button" data-red-select="1" aria-label="Logo" aria-pressed="false"></button>
+        <button type="button" data-red-select="2" aria-label="Detalle" aria-pressed="false"></button>
+        <button type="button" data-red-step="1" aria-label="Imagen siguiente">›</button>
+      </div>
+    </div>
+  </div>
+  <div class="promo-rotation__controls" aria-label="Elegir anuncio">
+    <button type="button" data-promo-select="0" aria-pressed="true">Llevate 3</button>
+    <button type="button" data-promo-select="1" aria-pressed="false">Red Line</button>
+    <button type="button" data-promo-pause aria-pressed="false" aria-label="Pausar rotación">Ⅱ</button>
+  </div>
+</section>
 
 
 <section class="guide-section" id="guia">
@@ -81,7 +107,7 @@
   </div>
 
   <div class="background-banner">
-    <img alt="Guía de germinación" class="background-banner-img" decoding="async" loading="lazy" src="img/fondo-germinacion.png" width="1600" height="450"/>
+    <img alt="Guía de germinación" class="background-banner-img" decoding="async" loading="lazy" src="img/fondo-germinacion.webp" width="1536" height="600"/>
 </div>
 
   </section>
@@ -154,7 +180,7 @@
 
 <section class="app-install-section" aria-label="Instalar app">
   <button class="app-toast app-install-btn" type="button" aria-label="Instalar NOVA Seeds">
-    <img id="appInstallImg" src="./img/app2.png" alt="Instalar NOVA Seeds" loading="eager" decoding="async" fetchpriority="low" onerror="this.onerror=null;this.src='img/app2.png';">
+    <img id="appInstallImg" src="./img/app2.webp" alt="Instalar NOVA Seeds" loading="lazy" decoding="async" fetchpriority="low" onerror="this.onerror=null;this.src='img/app2.webp';">
   </button>
 </section>
 
@@ -165,10 +191,10 @@
 </main>
 <noscript><div style="padding:12px;color:#fff;background:#111;border:1px solid #222;border-radius:12px;margin:12px;">Para ver el catálogo completo, activá JavaScript en tu navegador.</div></noscript>
 <!-- modal gallery -->
-<div aria-hidden="true" class="lightbox" id="lightbox">
+<div aria-hidden="true" class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galería">
 <div class="lb-inner">
 <button aria-label="Cerrar" class="lb-close" id="lb-close">×</button>
-<img alt="" id="lb-img" src=""/>
+<img alt="" id="lb-img"/>
 <div class="lb-thumbs" id="lb-thumbs"></div>
 </div>
 </div>

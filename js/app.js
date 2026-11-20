@@ -64,17 +64,43 @@ function equalizeCarouselHeights(container){
   window.addEventListener('load', ()=> setTimeout(recalcAll, 50));
 })();
 
+// Esperar a que las dos imágenes estén listas y arrancar en el mismo reloj.
+function startSaleStickerCycle(container){
+  const stickers = Array.from(container.querySelectorAll('.sale-sticker'));
+  if(!stickers.length) return;
+  const ready = stickers.map(sticker => typeof sticker.decode === 'function'
+    ? sticker.decode().catch(() => {})
+    : Promise.resolve());
+  Promise.all(ready).then(() => {
+    if(!container.isConnected) return;
+    container.classList.add('sale-stickers-ready');
+    // Una sola actualización de estilos para ambas tarjetas, incluso como fallback.
+    const timeline = document.timeline;
+    const start = timeline && timeline.currentTime;
+    if(start == null) return;
+    // Alinear explícitamente las animaciones en navegadores con Web Animations.
+    stickers.forEach(sticker => {
+      if(typeof sticker.getAnimations !== 'function') return;
+      sticker.getAnimations().forEach(animation => {
+        if(animation.animationName === 'saleStickerCycle') animation.startTime = start;
+      });
+    });
+  });
+}
+
 function buildCarousel(rootId, folder){
   const container = document.getElementById(rootId);
   if(!container) return;
   ['01','02','03'].forEach(id=>{
     const folderPath = `img/${folder}/${id}`;
-    // soporte para carpetas con front.jpg en minúscula (caso 02Genext/03)
+    // soporte para carpetas con front.webp en minúscula (caso 02Genext/03)
     const hero = (folder === '02Genext' && id === '03')
-      ? `${folderPath}/front.jpg`
+      ? `${folderPath}/front.webp`
       : `${folderPath}/Front.jpg`;
     const card = document.createElement('article');
     card.className = 'card';
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
     card.setAttribute('data-folder', folder);
     card.setAttribute('data-id', id);
 
@@ -87,7 +113,7 @@ function buildCarousel(rootId, folder){
     if(folder === '02Genext' && (id === '01' || id === '02')){
       const badge = document.createElement('img');
       badge.className = 'sale-sticker';
-      badge.src = "img/ChatGPT Image 7 feb 2026, 10_44_40 p.m..png";
+      badge.src = "img/ChatGPT Image 7 feb 2026, 10_44_40 p.m..webp";
       badge.alt = "20% OFF";
       badge.loading = "eager";
       badge.decoding = "async";
@@ -96,6 +122,7 @@ function buildCarousel(rootId, folder){
 const body = document.createElement('div');
     body.className = 'body';
     const meta = (DATA_OVERRIDE[folder] && DATA_OVERRIDE[folder][id]) || {title:`Item ${id}`, genetica:'', price:''};
+    card.setAttribute('aria-label', meta.title);
     // Tarjetas del carrusel: mantener el formato estándar (título + genética + precio)
     body.innerHTML = `<h3>${meta.title}</h3><div class="spec">${meta.genetica}</div>${
       meta.oldPrice && meta.price
@@ -106,27 +133,31 @@ const body = document.createElement('div');
     card.appendChild(heroDiv);
     card.appendChild(body);
     card.addEventListener('click', ()=> openGallery(folderPath));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGallery(folderPath); }
+    });
     container.appendChild(card);
   });
+  startSaleStickerCycle(container);
   requestAnimationFrame(()=> equalizeCarouselHeights(container));
 }
 
 function openGallery(folderPath, fromHistory=false){
   // default set
-  let images = ['foto1.jpg','foto2.jpg','foto3.jpg','foto4.jpg','Front2.jpg'].map(n=> `${folderPath}/${n}`);
+  let images = ['foto1.webp','foto2.jpg','foto3.jpg','foto4.jpg','Front2.jpg'].map(n=> `${folderPath}/${n}`);
 
   // Extras por coleccion (agregar al final, al lado de Front2.jpg)
   if (folderPath.indexOf('02Genext/01') !== -1) {
-    images.push(`${folderPath}/x2.png`);
+    images.push(`${folderPath}/x2.webp`);
   }
   if (folderPath.indexOf('02Genext/02') !== -1) {
-    images.push(`${folderPath}/x1.png`);
+    images.push(`${folderPath}/x1.webp`);
   }
 
   // caso específico: img/02Genext/03 tiene nombres en minúscula
   if (folderPath.indexOf('02Genext/03') !== -1) {
     // Auto Granel usa solo 3 fotos reales en el proyecto actualizado
-    images = ['foto1.jpg','front.jpg','front2.jpg'].map(n=> `${folderPath}/${n}`);
+    images = ['foto1.webp','front.webp','front2.webp'].map(n=> `${folderPath}/${n}`);
   }
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lb-img');
@@ -170,8 +201,13 @@ const id = parts[2];
 
 // Miniaturas: cambiar imagen principal
 Array.from(thumbs.querySelectorAll('img')).forEach((thumb, idx)=>{
+  // Mantener identificada la foto activa sin modificar el tamaño de la galería.
+  thumb.setAttribute('aria-current', idx === 0 ? 'true' : 'false');
   thumb.onclick = ()=>{
     img.src = images[idx];
+    thumbs.querySelectorAll('img').forEach((item, i) => {
+      item.setAttribute('aria-current', i === idx ? 'true' : 'false');
+    });
   };
 });
 
@@ -1607,3 +1643,78 @@ document.addEventListener('DOMContentLoaded', function(){
   document.addEventListener('DOMContentLoaded', bindNZ2);
 })(); 
 
+
+
+// v15: dos paneles en un espacio fijo; controles manuales y reloj único.
+(function () {
+  function initPromoRotation() {
+    const root = document.querySelector('.promo-rotation');
+    if (!root) return;
+    const panels = [...root.querySelectorAll('.promo-rotation__panel')];
+    const tabs = [...root.querySelectorAll('[data-promo-select]')];
+    const images = [...root.querySelectorAll('[data-red-image]')];
+    const dots = [...root.querySelectorAll('[data-red-select]')];
+    const pause = root.querySelector('[data-promo-pause]');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let active = 0, slide = 0, visible = false, stopped = reduced.matches;
+    let elapsed = 0, last = 0, frame = 0;
+    const duration = [4400, 8400];
+    function setImage(index) {
+      slide = (index + images.length) % images.length;
+      images.forEach((im, i) => { im.classList.toggle('is-current', i === slide); });
+      dots.forEach((dot, i) => dot.setAttribute('aria-pressed', String(i === slide)));
+    }
+    function show(index) {
+      if (panels[active].contains(document.activeElement) && index !== active) tabs[index].focus({preventScroll:true});
+      active = index; elapsed = 0;
+      if (index === 1) setImage(0);
+      panels.forEach((panel, i) => {
+        panel.classList.toggle('is-active', i === active);
+        panel.setAttribute('aria-hidden', String(i !== active));
+        panel.inert = i !== active;
+      });
+      tabs.forEach((tab, i) => tab.setAttribute('aria-pressed', String(i === active)));
+      root.classList.toggle('is-in-view', visible && index === 0 && !stopped);
+    }
+    function tick(now) {
+      frame = 0;
+      if (!visible || stopped || document.hidden) { last = 0; return; }
+      if (last) elapsed += Math.min(now - last, 100);
+      last = now;
+      if (elapsed >= duration[active]) show(1 - active);
+      else if (active === 1) setImage(Math.min(2, Math.floor(elapsed / 2800)));
+      frame = requestAnimationFrame(tick);
+    }
+    function sync() {
+      root.classList.toggle('is-in-view', visible && active === 0 && !stopped && !document.hidden);
+      pause.setAttribute('aria-pressed', String(stopped));
+      pause.setAttribute('aria-label', stopped ? 'Reanudar rotación' : 'Pausar rotación');
+      pause.textContent = stopped ? '▶' : 'Ⅱ';
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0; last = 0;
+      if (visible && !stopped && !document.hidden) frame = requestAnimationFrame(tick);
+    }
+    function manualImage(i) { setImage(i); elapsed = slide * 2800; last = 0; }
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => { show(i); sync(); }));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => manualImage(i)));
+    root.querySelectorAll('[data-red-step]').forEach(btn => btn.addEventListener('click', () => manualImage(slide + Number(btn.dataset.redStep))));
+    pause.addEventListener('click', () => { stopped = !stopped; sync(); });
+    reduced.addEventListener('change', e => { stopped = e.matches; sync(); });
+    document.addEventListener('visibilitychange', sync);
+    let startX = null, startY = null;
+    const gallery = root.querySelector('.redline-panel__gallery');
+    gallery.addEventListener('touchstart', e => { startX = e.changedTouches[0].clientX; startY = e.changedTouches[0].clientY; }, {passive:true});
+    gallery.addEventListener('touchend', e => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX, dy = e.changedTouches[0].clientY - startY;
+      if (active === 1 && Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) manualImage(slide + (dx < 0 ? 1 : -1));
+      startX = startY = null;
+    }, {passive:true});
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, {threshold:.12}).observe(root);
+    } else visible = true;
+    show(0); sync();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPromoRotation, {once:true});
+  else initPromoRotation();
+})();

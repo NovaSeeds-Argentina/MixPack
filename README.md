@@ -1,159 +1,50 @@
-# VGVSERV – Guía rápida de mantenimiento
+# NOVA Seeds — versión actualizada
 
-Este proyecto fue refactorizado para separar **datos (PRODUCTS)** de la **lógica (app)**, facilitar la carga de múltiples imágenes por genética y permitir agregar nuevas genéticas sin tocar el HTML.
+Sitio estático. Publicar el contenido del ZIP, sin una carpeta contenedora adicional, en el directorio del sitio. No requiere dependencias para funcionar.
 
----
+## Archivos activos
 
-## Estructura de carpetas
+- `index.html`: página de inicio.
+- `tutorial.html`: página secundaria existente.
+- `css/styles.css`: estilos compartidos; al final se encuentra el bloque de ajustes visuales 2026.
+- `js/app.js`: carrusel y galería existentes.
+- `js/pwa.js`: instalación y registro de service worker.
+- `sw.js`: caché versionada, recursos locales y fallback de navegación.
+- `manifest.webmanifest`: manifiesto único, con rutas relativas.
+- `img/`: recursos gráficos (se mantienen los iconos de instalación PNG y la vista previa social JPG).
 
-```
-/
-├─ index.html (u otros .html)
-├─ img/                 # tus imágenes
-├─ js/
-│  ├─ products.js       # <-- define const PRODUCTS = [...] (DATA)
-│  └─ app.min.js        # <-- lógica minificada (BOOTSTRAP/RENDER)
-└─ css/                 # estilos (si aplica)
-```
+## Cambios
 
-El HTML carga **primero** `js/products.js` y **después** `js/app.min.js`. El render se monta de forma automática sobre un contenedor con id `gallery` si existe.
+- Compresión de imágenes mediante WebP a calidad 90, sin reducir dimensiones.
+- Corrección de declaraciones CSS con errores de sintaxis y eliminación de declaraciones idénticas dentro de una misma regla, reglas vacías y fragmentos CSS huérfanos.
+- Ajustes de espaciado, superficies, separadores, encabezado y distribución adaptable. El carrusel conserva su desplazamiento móvil y muestra las tres tarjetas en escritorio.
+- Registro PWA relativo, sin referencias a una ubicación antigua; caché versionada y limitada al sitio. Los recursos externos como el mapa no están disponibles sin conexión.
+- Se retiraron los scripts y hojas de estilo antiguos que no eran referenciados por las páginas activas. El ZIP original sigue siendo el respaldo.
+- Se conservaron los textos, datos, precios y contactos existentes.
 
-Ejemplo mínimo de HTML para la galería:
-```html
-<div id="gallery"></div>
-<script src="js/products.js"></script>
-<script src="js/app.min.js"></script>
-```
+- Se restauró la animación original de aparición y desaparición del distintivo 20% OFF en las tarjetas 01 y 02 (ciclo de 4 segundos).
 
-> Si no existe `#gallery`, no se renderiza nada (comportamiento intencional).
+- Vista de escritorio de las galerías 01 y 02: panel de imagen con tamaño estable, seis miniaturas siempre visibles, fichas técnicas con desplazamiento independiente y dos columnas en pantallas a partir de 1400 px. El diseño móvil no cambia.
 
----
+## Publicación y verificación
 
-## Cómo agregar una genética nueva (SIN tocar el HTML)
+Para comprobar en local, servir por HTTP desde la raíz del proyecto, por ejemplo con `python -m http.server 8000`. La PWA requiere HTTPS en producción (localhost es una excepción). Para publicar, mantener la estructura original de carpetas y eliminar del alojamiento los archivos obsoletos reemplazados por esta versión. Para futuras actualizaciones de recursos, cambiar `CACHE_NAME` en `sw.js` para invalidar la versión anterior. No requiere instalar bibliotecas.
 
-1. **Agrega las imágenes** a la carpeta `img/` (usa nombres en kebab-case, ver convención más abajo).
-2. **Abre** `js/products.js`.
-3. **Copia** el bloque **TEMPLATE** y **pégalo** dentro del arreglo `PRODUCTS`.
-4. Cambia:
-   - `id`: slug en **kebab-case** (ej. `white-widow-auto`).
-   - `title`: el título visible (ej. `White Widow Auto`).
-   - `images`: rutas relativas en `img/` (hero + variantes).
+Validación efectuada: sintaxis JavaScript y CSS, manifiesto, rutas locales y ZIP. Se verificaron las dos galerías en Chromium con HTML, CSS, JavaScript e imágenes locales integrados en una página de prueba (1728 × 864, 1440 × 900, 1280 × 720, 1024 × 768 y 390 × 844). En escritorio se comprobó el cambio de las seis miniaturas, la estabilidad del área de imagen y la ausencia de superposición de botones. La navegación HTTP está bloqueada en este entorno, por lo que falta comprobar el sitio publicado y la instalación PWA en dispositivos reales.
 
-Guarda el archivo, recarga el navegador y listo.
+- Ajuste v9: las cuatro fichas técnicas de las galerías 01 y 02 ocupan toda la altura disponible a partir de 1400 px, en dos filas iguales; los detalles se reparten verticalmente sin cambiar el contenido ni la vista móvil.
 
----
+- Ajuste v10: galería 03 en escritorio (desde 901 px) en una sola columna centrada, con imagen de proporción estable, tres miniaturas y descripción debajo. Se elimina la división horizontal y la altura sobrante. Las otras galerías y la vista móvil mantienen sus estilos. Caché v10.
+Verificación v10: Chromium con recursos locales incrustados (1920 × 1080, 1728 × 864, 1366 × 768, 1280 × 600, 1024 × 768 y 390 × 844). Se verificó la distribución vertical, el cambio de miniaturas, el cierre y la conservación de las cuatro fichas de las galerías 01 y 02 a 1920 y 1728 px. En pantallas bajas se mantiene el scroll. HTTP y PWA en producción pendientes.
 
-## Ejemplo listo para copiar/pegar (TEMPLATE)
+- Ajuste v11: distintivos de las tarjetas 01 y 02 sincronizados en un único reloj de documento, con pausa de 5 s, entrada de 0,6 s, permanencia de 3 s y salida de 0,5 s. Se conserva el gráfico existente y la vista de las galerías. Se desactiva el movimiento del distintivo cuando el sistema solicita reducir animaciones. Caché v11.
+Verificación v11: sintaxis de JavaScript y CSS; prueba aislada del ciclo en Chromium con CSS, función de sincronización y gráfico del proyecto, a 1728 × 864 y 390 × 844. Se comprobó el reloj común, la opacidad en cada fase y la repetición. También se probó la preferencia de movimiento reducido. La navegación HTTP y la PWA publicada quedan pendientes.
 
-```js
-{
-  id: 'template-id',              // slug en kebab-case, ej: 'white-widow-auto'
-  title: 'Template Title',        // título visible
-  images: [
-    'img/template-hero.jpg',      // reemplaza por tus rutas reales
-    'img/template-1.jpg',
-    'img/template-2.jpg'
-  ]
-}
-```
+- Ajuste v12: ciclo sincronizado de 8,6 s; pausa de 5 s, entrada y rebote de 320 ms, permanencia de 3 s con dos pulsos breves y salida de 280 ms. Se conserva el reloj común, la preferencia de movimiento reducido y el resto del sitio. Caché v12.
 
-> **Orden de imágenes**: la primera se considera “principal/hero” y suele mostrarse primero.
+- Ajuste v13: pausa sin distintivo reducida de 5 s a 2 s. Ciclo de 5,6 s; se mantienen entrada de 320 ms, permanencia de 3 s, dos pulsos, salida de 280 ms y sincronización. Caché v13.
 
----
+- Ajuste v14: animación del banner al entrar en pantalla (400 ms), destello diagonal, escala máxima de 1,015, pulso del X3 y subrayado animado. Ciclo sincronizado interno de 4,8 s con aproximadamente 4 s de reposo; solo activo en pantalla y con respeto a la preferencia de movimiento reducido. No cambia el ciclo v13 de las tarjetas. Caché v14.
+Verificación v14: Chromium con la sección, la hoja CSS completa y la función de observación local, a 1728 × 864 y 390 × 844; se comprobó la activación y detención por scroll, el reposo del destello y el modo de movimiento reducido. Navegación HTTP bloqueada en el entorno; publicación y PWA pendientes.
 
-## Convención de nombres (recomendada)
-
-- **kebab-case**: minúsculas + guiones (`white-widow-auto.jpg`).
-- Evita espacios, acentos o caracteres especiales.
-- Prefiere el mismo **prefijo** para las variantes:  
-  `white-widow-auto-hero.jpg`, `white-widow-auto-1.jpg`, `white-widow-auto-2.jpg`…
-
-Esto ayuda a mantener el proyecto ordenado y a realizar búsquedas/renombrados en lote cuando haga falta.
-
----
-
-## Reemplazar o sumar imágenes a una genética existente
-
-En `js/products.js`, busca el objeto por `id` y agrega o reemplaza rutas dentro del array `images`.  
-No hay que tocar `app.min.js` ni el HTML.
-
-```js
-{
-  id: 'phantom-ice',
-  title: 'Phantom Ice',
-  images: [
-    'img/phantom-ice-hero.jpg',
-    'img/phantom-ice-1.jpg',
-    'img/phantom-ice-2.jpg',
-    // agrega aquí más rutas si quieres
-  ]
-}
-```
-
----
-
-## Optimización y performance (sugerencias)
-
-- **Lazy loading**: todas las `<img>` se renderizan con `loading="lazy"` automáticamente.
-- **Peso recomendado**: intenta que cada imagen pese ≤ 250–350 KB para una carga fluida en móvil.
-- **Tamaño**: 1200–1600 px de ancho suele ser un buen balance.
-- **Formato**: usa **.jpg** para fotos; considera **.webp** si tu hosting lo sirve bien (añade ambas y referencia webp primero si lo deseas).
-- **Cache busting**: si reemplazas un archivo con el mismo nombre y no ves cambios, fuerza recarga (Ctrl+F5) o cambia el nombre del archivo.
-
----
-
-## Personalización del render
-
-El bootstrap busca `#gallery` al cargar la página y dibuja todas las genéticas definidas en `PRODUCTS`.  
-Si quieres cambiar el **ID del contenedor**, basta modificarlo en `app.min.js` (o en la versión no minificada de tu preferencia) donde se llama a `renderGalleryFromConfig('#gallery', PRODUCTS);`.
-
-> Si prefieres, podemos generar una versión no minificada `app.js` con comentarios para edición más cómoda.
-
----
-
-## Solución de problemas
-
-- **No aparecen las imágenes**: verifica rutas (respetar mayúsculas/minúsculas y carpetas).  
-- **404 en alguna imagen**: confirma que el archivo exista en `img/` y que el nombre coincida exactamente.
-- **No se renderiza nada**: asegúrate de tener `<div id="gallery"></div>` en el HTML **y** que `products.js` se cargue **antes** que `app.min.js`.
-- **Cambios que no se ven**: limpia caché del navegador (Ctrl+F5) o prueba en ventana privada.
-- **IDs duplicados**: cada `id` dentro de `PRODUCTS` debe ser único.
-
----
-
-## Preguntas frecuentes
-
-**¿Puedo reordenar las imágenes?**  
-Sí. Cambia el orden en el array `images` dentro del objeto de la genética.
-
-**¿Puedo ocultar temporalmente una genética?**  
-Sí. Comenta el objeto en `PRODUCTS` o crea un flag `isActive: false` y filtra antes de renderizar (podemos ayudarte a añadir este filtro en el bootstrap).
-
-**¿Cómo agrego una descripción por genética?**  
-Añade un campo `description` al objeto y ajusta el render para mostrarlo (podemos dejarlo listo si lo necesitas).
-
----
-
-## Changelog de la refactorización
-
-- Renombrado de IDs/títulos: `gorilla-glue-auto` → `phantom-ice` (**Phantom Ice**), `lemon-haze-fem` → `la-messias` (**La Messias**).
-- Centralización de datos en `js/products.js` (`const PRODUCTS = [...]`).
-- Lógica minificada en `js/app.min.js` y carga de scripts ordenada.
-- Soporte para múltiples imágenes por genética (ejemplos precargados).
-- Template listo para copiar/pegar.
-- `loading="lazy"` aplicado a imágenes para mejorar performance.
-- Limpieza y homogeneización de rutas/archivos de imagen.
-
----
-
-## Placeholder SVG (fallo de imágenes)
-
-Si una genética no trae imágenes, el sistema usa un **placeholder SVG** muy liviano.
-
-- Archivo: `img/placeholder.svg` (vectorial, se ve nítido en todas las resoluciones)
-- Lógica:
-  - **Hero del card**: usa `PRODUCTS[id].images[0]` o, si no existe, `placeholder.svg`.
-  - **Galería de 3 del panel**: usa las 3 rutas de `PRODUCTS[id].images` o, si faltan, 3 veces `placeholder.svg`.
-- Opcional: función `svgPlaceholder(label, bg, stroke, text)` disponible en `app.min.js` para generar placeholders inline (data URI) sin usar archivos.
-
-> Puedes reemplazar el diseño del placeholder editando `img/placeholder.svg`.
+- Ajuste v15: alternancia de Llevate 3 (4,4 s por turno) y Red Line (8,4 s por turno), con tres imágenes aportadas por el usuario, sin agregar una tarjeta de producto. En escritorio se muestran las tres imágenes y rota el destaque; en móvil se muestra una por vez. Controles de selección, pausa y navegación manual, gestos táctiles y detención fuera de pantalla. Se respeta la preferencia de movimiento reducido. Caché v15. Prueba aislada en Chromium a 1728, 390 y 320 px de ancho: altura estable y controles manuales; alternancia automática verificada a 390 px. Publicación y PWA real pendientes.
