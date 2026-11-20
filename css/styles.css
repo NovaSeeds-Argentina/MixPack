@@ -2726,29 +2726,33 @@ body.home-page{ gap:0; }
 
 /* Envíos Correo Argentino */
 .shipping-section{
-  margin: 10px 0 14px;
-  padding: 8px;
-  background: #0b0b0e;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px auto 14px;
+  padding: 14px;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   text-align: center;
+  overflow: hidden;
 }
 
 .shipping-title{
-  margin: 0 0 8px;
-  font-size: 0.82rem;
+  margin: 0 0 14px;
+  font-size: 1.15rem;
   line-height: 1.2;
   color: #fff;
   font-weight: 800;
 }
 
 .shipping-img{
-  width: min(300px, 100%);
+  width: 100%;
+  max-width: none;
   height: auto;
   display: block;
-  margin: 0 auto;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+  margin: 0;
+  border-radius: 0;
+  border: 0;
 }
 
 .shipping-note{
