@@ -71,3 +71,5 @@ Verificación v24: prueba aislada del orden, tiempos con reloj controlado y rein
 Verificación v25: prueba aislada del orden, tiempos y reinicio de animaciones mediante reloj controlado en Chromium a 390 y 1440 px; sintaxis de JS validada. Web publicada pendiente.
 
 - Ajuste v26: reemplazo de img/red-line/portada.webp por la imagen suministrada (PNG convertido a WebP, 1254 × 1254 px). Caché v26. Sin cambios en las animaciones ni en la distribución.
+
+- Ajuste v27: eliminación exclusiva del separador entre el carrusel principal y el bloque rotativo. Se conservan los demás separadores y las animaciones. Caché v27.
