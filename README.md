@@ -73,3 +73,8 @@ Verificación v25: prueba aislada del orden, tiempos y reinicio de animaciones m
 - Ajuste v26: reemplazo de img/red-line/portada.webp por la imagen suministrada (PNG convertido a WebP, 1254 × 1254 px). Caché v26. Sin cambios en las animaciones ni en la distribución.
 
 - Ajuste v27: eliminación exclusiva del separador entre el carrusel principal y el bloque rotativo. Se conservan los demás separadores y las animaciones. Caché v27.
+
+
+- Ajuste v28: transición fusionada entre Llevate 3 y Red Line: barrido diagonal rojo sobre un escenario de altura constante, salida/entrada superpuestas, título e imágenes de Red Line con entrada escalonada y Llevate 3 con secuencia escalonada de texto y premio. Se conservan dos apariciones de 7 s y una de Red Line de 5 s (ciclo de 19 s), contenido, flechas y carrusel. Preferencia de movimiento reducido respetada. Caché v28.
+
+- Ajuste v29: reestructuración **solo en móviles y tablets (≤900 px)** de las galerías Dealer Deal XXL y Psycho XXL: imagen/miniaturas a la izquierda y fichas técnicas a la derecha, igual que la organización en escritorio; imagen sin deformación y panel de información con desplazamiento vertical propio. En pantallas de 559 px o menos los atributos se apilan en una columna dentro de cada ficha para mantenerlos legibles. En pantallas de 560 a 900 px se reparten en dos columnas. Se respetan la tercera galería, los botones, las fotografías, los datos, las promociones y los estilos de escritorio. Caché PWA v29.

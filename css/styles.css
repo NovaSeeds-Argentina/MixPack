@@ -3984,3 +3984,379 @@ body.theme-dark { margin: 0; background: #000; font-family: var(--font-ui); }
     transition: opacity .20s ease-in;
   }
 }
+
+
+/* v28 — Continuidad cinematográfica entre Llevate 3 y Red Line.
+   El barrido pertenece al escenario, no a cada tarjeta; así no hay saltos de altura. */
+.home-page .promo-rotation__stage { position: relative; isolation: isolate; }
+.home-page .promo-rotation__panel { will-change: auto; }
+.promo-rotation__wipe {
+  position: absolute; inset: 0; overflow: hidden;
+  z-index: 8; pointer-events: none; visibility: hidden;
+}
+.promo-rotation__wipe::before {
+  content: ''; position: absolute; inset: -45% -62%;
+  background: linear-gradient(107deg,
+    transparent 36%, rgba(255, 26, 53, .03) 42%,
+    rgba(255, 36, 70, .22) 45%, rgba(255, 143, 127, .72) 47%,
+    rgba(255, 244, 228, .86) 47.5%, rgba(255, 30, 72, .48) 48.5%,
+    rgba(112, 8, 31, .18) 52%, transparent 60%);
+  transform: translateX(-100%); opacity: 0;
+}
+.promo-rotation__wipe::after {
+  content: ''; position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 40% 42% at 50% 48%, rgba(255, 39, 76, .19), transparent 85%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .promo-rotation.is-switching .promo-rotation__panel,
+  .home-page .promo-rotation.is-switching .promo-rotation__panel.is-active {
+    transition: none; will-change: transform, opacity, clip-path;
+  }
+  .home-page .promo-rotation.is-switching .promo-rotation__panel.is-leaving {
+    visibility: visible; pointer-events: none;
+  }
+  .promo-rotation.is-switching .promo-rotation__wipe { visibility: visible; }
+  .promo-rotation.is-switching .promo-rotation__wipe::after {
+    animation: novaFusionFlare .79s ease-out both;
+  }
+  .promo-rotation.is-switching-to-redline .promo-rotation__wipe::before {
+    animation: novaFusionSweep .79s cubic-bezier(.22,.64,.27,1) both;
+  }
+  .promo-rotation.is-switching-to-offer .promo-rotation__wipe::before {
+    animation: novaFusionSweepBack .79s cubic-bezier(.22,.64,.27,1) both;
+    filter: hue-rotate(-26deg) saturate(1.15);
+  }
+  .home-page .promo-rotation.is-switching-to-redline .promo-rotation__offer.is-leaving {
+    z-index: 2; animation: novaLeaveOffer .66s cubic-bezier(.55,0,1,.8) both;
+  }
+  .home-page .promo-rotation.is-switching-to-redline .redline-panel.is-active {
+    z-index: 5; animation: novaRevealRed .76s cubic-bezier(.17,.8,.25,1) both;
+  }
+  .home-page .promo-rotation.is-switching-to-offer .redline-panel.is-leaving {
+    z-index: 2; animation: novaLeaveRed .70s cubic-bezier(.55,0,1,.8) both;
+  }
+  .home-page .promo-rotation.is-switching-to-offer .promo-rotation__offer.is-active {
+    z-index: 5; animation: novaRevealOffer .76s cubic-bezier(.17,.8,.25,1) both;
+  }
+  /* Red Line entra en capas: título, luego tarjetas de imágenes, después controles. */
+  .promo-rotation.is-switching-to-redline .redline-panel__heading {
+    animation: novaRedHeadline .64s .12s cubic-bezier(.15,.88,.21,1) both;
+  }
+  .promo-rotation.is-switching-to-redline .redline-panel__gallery {
+    animation: novaRedGalleryEntrance .65s .16s cubic-bezier(.19,.83,.25,1) both;
+  }
+  .promo-rotation.is-switching-to-redline .redline-panel__nav {
+    animation: novaRedNavEntrance .43s .31s ease-out both;
+  }
+  .promo-rotation.is-replaying .offer-creative__atmosphere {
+    animation: novaOfferReflash .29s ease-in-out both;
+  }
+}
+@keyframes novaFusionSweep {
+  0% { opacity: 0; transform: translateX(-98%) skewX(-10deg); }
+  17% { opacity: .85; }
+  68% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(98%) skewX(-10deg); }
+}
+@keyframes novaFusionSweepBack {
+  0% { opacity: 0; transform: translateX(98%) skewX(10deg); }
+  18% { opacity: .88; }
+  68% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-98%) skewX(10deg); }
+}
+@keyframes novaFusionFlare {
+  0%,100% { opacity: 0; }
+  38% { opacity: .14; }
+  51% { opacity: .70; }
+  75% { opacity: .07; }
+}
+@keyframes novaLeaveOffer {
+  0% { opacity: 1; transform: scale(1); filter: blur(0); }
+  50% { opacity: .76; transform: scale(.985); filter: blur(1px); }
+  100% { opacity: 0; transform: translateX(-5%) scale(.96); filter: blur(7px); }
+}
+@keyframes novaRevealRed {
+  0% { opacity: 0; transform: translateX(4%) scale(1.045); clip-path: inset(0 0 0 100%); }
+  44% { opacity: .84; }
+  88% { opacity: 1; transform: translateX(0) scale(1.004); }
+  100% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+@keyframes novaLeaveRed {
+  0% { opacity: 1; transform: scale(1); filter: blur(0); }
+  60% { opacity: .8; transform: scale(1.014); }
+  100% { opacity: 0; transform: translateX(5%) scale(1.045); filter: blur(6px); }
+}
+@keyframes novaRevealOffer {
+  0% { opacity: 0; transform: translateX(-3%) scale(.975); clip-path: inset(0 100% 0 0); }
+  40% { opacity: .84; }
+  100% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+@keyframes novaRedHeadline {
+  0% { opacity: 0; transform: translateY(-14px) scale(.94); filter: blur(6px); }
+  72% { opacity: 1; transform: translateY(2px) scale(1.025); filter: blur(0); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes novaRedGalleryEntrance {
+  0% { opacity: 0; transform: translateY(25px) scale(.96); filter: brightness(1.55) blur(4px); }
+  76% { opacity: 1; transform: translateY(-2px) scale(1.008); filter: brightness(1.08) blur(0); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@keyframes novaRedNavEntrance {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes novaOfferReflash {
+  0% { opacity: 1; filter: brightness(1); }
+  75% { opacity: .8; filter: brightness(1.7); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+/* La entrada del primer anuncio es una coreografía: texto, marca, premio. */
+@media (prefers-reduced-motion: no-preference) {
+  .promo-rotation.is-in-view .offer-creative__eyebrow {
+    animation: novaIntroLabel .34s .10s cubic-bezier(.19,.88,.27,1) both;
+  }
+  .promo-rotation.is-in-view .offer-creative__brand {
+    animation: novaIntroBrand .53s .23s cubic-bezier(.14,.86,.22,1) both;
+  }
+  .promo-rotation.is-in-view .offer-creative__verb {
+    animation: novaRewardVerb .33s .83s ease-out both;
+  }
+  .promo-rotation.is-in-view .offer-creative__number {
+    animation: novaRewardNumber 4.15s 1.04s both;
+  }
+  .promo-rotation.is-in-view .offer-creative__free {
+    animation: novaRewardFree .50s 1.15s cubic-bezier(.13,.85,.22,1) both;
+  }
+  .promo-rotation.is-in-view .offer-creative__footer {
+    animation: novaRewardFooter .42s 1.45s ease-out both;
+  }
+}
+/* El desvanecimiento de la primera vuelta solo prepara el segundo impacto. */
+@media (prefers-reduced-motion: no-preference) {
+  .promo-rotation.is-replaying .offer-creative__content {
+    opacity: 0; transform: scale(.965); filter: blur(4px);
+    transition: opacity .24s ease-in, transform .24s ease-in, filter .24s ease-in;
+  }
+  .promo-rotation .offer-creative__content {
+    transition: opacity .18s ease-out, transform .18s ease-out, filter .18s ease-out;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-rotation__wipe { display:none !important; }
+  .home-page .promo-rotation__panel { animation:none !important; }
+}
+
+/* =============================================================
+   NOVA Seeds V29 | Galerías Dealer Deal XXL y Psycho XXL en móvil
+   Imagen y miniaturas a la izquierda, fichas técnicas a la derecha.
+   Únicamente aplica a las galerías 01 y 02 (no Auto Granel).
+   ============================================================= */
+@media (max-width: 900px) {
+  #lightbox.active:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    padding: calc(68px + env(safe-area-inset-top, 0px)) 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #0b0c0d;
+    overflow: hidden !important;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .lb-split {
+    box-sizing: border-box;
+    display: grid;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr) !important;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: stretch;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .panel {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    border: 1px solid #2a2c2e !important;
+    border-radius: 12px !important;
+    background: #111315;
+    overflow: hidden !important;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .panel-visual {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    padding: 0;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-img {
+    display: block;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100% !important;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    object-fit: contain;
+    object-position: center;
+    background: #0c0d0e;
+    cursor: zoom-in;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
+    gap: 5px;
+    padding: 6px !important;
+    background: #181a1c;
+    border-top: 1px solid #292c2e !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: #5b6367 transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs img {
+    box-sizing: border-box;
+    display: block;
+    flex: 0 0 48px;
+    width: 48px;
+    min-width: 48px;
+    max-width: none;
+    height: 44px;
+    object-fit: contain;
+    background: #101112;
+    border: 2px solid #34383b;
+    border-radius: 5px;
+    scroll-snap-align: start;
+    opacity: .8;
+    cursor: pointer;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs img:is(:hover, [aria-current="true"]) {
+    opacity: 1;
+    border-color: #90ee90;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .panel-fichas {
+    display: block;
+    box-sizing: border-box;
+    padding: 6px;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #43484b transparent;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    min-width: 0;
+    align-content: start;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-card {
+    box-sizing: border-box;
+    min-width: 0;
+    margin: 0;
+    padding: 10px !important;
+    border: 1px solid #282c2d !important;
+    border-radius: 9px !important;
+    background: #18191b;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-title {
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    font-size: .85rem !important;
+    line-height: 1.2;
+    color: #90ee90 !important;
+    border-bottom: 1px solid #3a643b !important;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px !important;
+    min-width: 0;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-item {
+    min-width: 0;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-label {
+    font-size: .64rem !important;
+    line-height: 1.2 !important;
+    margin: 0 0 2px;
+    letter-spacing: .01em;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-val {
+    font-size: .76rem !important;
+    line-height: 1.24 !important;
+    overflow-wrap: anywhere;
+  }
+
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) :is(#lb-close, #lb-cart) {
+    box-sizing: border-box;
+    top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+    width: 46px !important;
+    height: 46px !important;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-cart { left: 12px !important; }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-close { right: 12px !important; }
+}
+
+/* En móviles anchos y tablets, dos columnas de atributos dentro de cada ficha. */
+@media (min-width: 560px) and (max-width: 900px) {
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 10px !important;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-label { font-size: .70rem !important; }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-val { font-size: .85rem !important; }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-title { font-size: 1rem !important; }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .ft-card { padding: 12px !important; }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs img { flex-basis: 60px; width:60px; height: 52px; }
+}
+
+/* V30: imagen protagonista y pista animada de galería desplazable. */
+@media (max-width: 900px) {
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) .panel-visual {
+    position: relative;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-img {
+    object-fit: cover !important;
+    object-position: center center;
+    background: #0c0d0e;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs {
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs img {
+    transition: transform .22s ease, opacity .22s ease, border-color .22s ease;
+  }
+  #lightbox:is([data-folder-path="img/02Genext/01"], [data-folder-path="img/02Genext/02"]) #lb-thumbs img[aria-current="true"] {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px #90ee9070;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #lightbox #lb-thumbs { scroll-behavior: auto !important; }
+}

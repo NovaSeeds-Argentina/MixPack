@@ -162,7 +162,10 @@ function openGallery(folderPath, fromHistory=false){
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lb-img');
   const thumbs = document.getElementById('lb-thumbs');
+  // Cancelar la demostración de desplazamiento de una galería anterior.
+  if (window.novaThumbHintTimer) clearTimeout(window.novaThumbHintTimer);
   thumbs.innerHTML = '';
+  thumbs.scrollLeft = 0;
   img.src = images[0];
   images.forEach((src, idx)=>{
     const im = document.createElement('img');
@@ -210,6 +213,31 @@ Array.from(thumbs.querySelectorAll('img')).forEach((thumb, idx)=>{
     });
   };
 });
+
+// Indicación visual única: las miniaturas se deslizan y vuelven,
+// mostrando que existen más fotos sin cambiar la selección del usuario.
+if (folderPath.includes('02Genext/01') || folderPath.includes('02Genext/02')) {
+  const stopHint = () => {
+    clearTimeout(window.novaThumbHintTimer);
+    thumbs.removeEventListener('pointerdown', stopHint);
+    thumbs.removeEventListener('touchstart', stopHint);
+    thumbs.removeEventListener('wheel', stopHint);
+  };
+  thumbs.addEventListener('pointerdown', stopHint, {once:true});
+  thumbs.addEventListener('touchstart', stopHint, {once:true, passive:true});
+  thumbs.addEventListener('wheel', stopHint, {once:true, passive:true});
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.novaThumbHintTimer = setTimeout(() => {
+      if (!lb.classList.contains('active') || !thumbs.isConnected) return;
+      const distance = Math.min(thumbs.scrollWidth - thumbs.clientWidth, Math.max(55, thumbs.clientWidth * .46));
+      if (distance <= 0) return;
+      thumbs.scrollTo({left: distance, behavior:'smooth'});
+      window.novaThumbHintTimer = setTimeout(() => {
+        if (thumbs.isConnected) thumbs.scrollTo({left:0, behavior:'smooth'});
+      }, 1050);
+    }, 800);
+  }
+}
 
 // Helper to build a ficha panel
 function buildFicha(meta, titleOverride){
@@ -1645,7 +1673,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-// v25: dos apariciones consecutivas de 7 s del primer panel, luego el segundo.
+// v28: escenas publicitarias enlazadas con barrido cinematográfico.
+// Orden: Llevate 3 (7 s) → Llevate 3 (7 s) → Red Line (5 s) → repetir.
 (function () {
   function initPromoRotation() {
     const root = document.querySelector('.promo-rotation');
@@ -1653,78 +1682,125 @@ document.addEventListener('DOMContentLoaded', function(){
     const panels = [...root.querySelectorAll('.promo-rotation__panel')];
     const images = [...root.querySelectorAll('[data-red-image]')];
     const dots = [...root.querySelectorAll('[data-red-select]')];
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let active = 0, phase = 0, slide = 0, visible = false;
-    let elapsed = 0, last = 0, frame = 0;
-    const sequence = [{panel:0, time:7000}, {panel:0, time:7000}, {panel:1, time:5000}];
-    const replayExit = 220;
-    const imageDuration = sequence[2].time / Math.max(1, images.length);
-    function setImage(index) {
-      slide = (index + images.length) % images.length;
-      images.forEach((im, i) => { im.classList.toggle('is-current', i === slide); });
-      dots.forEach((dot, i) => dot.setAttribute('aria-pressed', String(i === slide)));
+    const gallery = root.querySelector('.redline-panel__gallery');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sequence = [
+      { panel: 0, time: 7000 },
+      { panel: 0, time: 7000 },
+      { panel: 1, time: 5000 }
+    ];
+    const replayExitMs = 270;
+    const fusionMs = 790;
+    const imageDuration = sequence[2].time / Math.max(images.length, 1);
+    let phase = 0, active = 0, slide = 0;
+    let visible = false, elapsed = 0, last = 0, frame = 0, fusionTimer = 0;
+
+    function setImage(i) {
+      if (!images.length) return;
+      slide = (i + images.length) % images.length;
+      images.forEach((im, index) => im.classList.toggle('is-current', index === slide));
+      dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === slide)));
     }
-    function show(index) {
-      const replay = active === 0 && index === 0 && phase === 1;
+
+    function finishFusion() {
+      if (fusionTimer) clearTimeout(fusionTimer);
+      fusionTimer = 0;
+      root.classList.remove('is-switching', 'is-switching-to-redline', 'is-switching-to-offer');
+      panels.forEach(panel => panel.classList.remove('is-leaving'));
+    }
+
+    function show(index, animate = false) {
+      const previous = active;
+      const replay = previous === 0 && index === 0 && phase === 1;
+      const fusion = animate && previous !== index && visible && !document.hidden && !reduced.matches;
+      finishFusion();
       if (replay) {
+        // Force reflow to replay the entrance of both text groups together.
         root.classList.remove('is-in-view');
-        // Flush styles so both independent text animations start again.
         void root.offsetWidth;
       }
       root.classList.remove('is-replaying');
-      active = index; elapsed = 0;
+      if (fusion) {
+        root.classList.add('is-switching', index === 1 ? 'is-switching-to-redline' : 'is-switching-to-offer');
+      }
+      active = index;
+      elapsed = 0;
       if (index === 1) setImage(0);
       panels.forEach((panel, i) => {
+        panel.classList.toggle('is-leaving', fusion && i === previous);
         panel.classList.toggle('is-active', i === active);
         panel.setAttribute('aria-hidden', String(i !== active));
         panel.inert = i !== active;
       });
-      root.classList.toggle('is-in-view', visible && index === 0 && !reduced.matches);
-      root.classList.toggle('is-redline-in-view', visible && index === 1 && !reduced.matches && !document.hidden);
+      root.classList.toggle('is-in-view', visible && active === 0 && !reduced.matches && !document.hidden);
+      root.classList.toggle('is-redline-in-view', visible && active === 1 && !reduced.matches && !document.hidden);
+      if (fusion) fusionTimer = setTimeout(finishFusion, fusionMs);
     }
+
     function tick(now) {
       frame = 0;
       if (!visible || document.hidden) { last = 0; return; }
-      if (root.contains(document.activeElement) && document.activeElement.matches(':focus-visible')) { last = 0; frame = requestAnimationFrame(tick); return; }
+      // Pausar al usar con teclado los controles de la galería Red Line.
+      if (active === 1 && root.contains(document.activeElement) && document.activeElement.matches(':focus-visible')) {
+        last = 0; frame = requestAnimationFrame(tick); return;
+      }
       if (last) elapsed += Math.min(now - last, 100);
       last = now;
       if (elapsed >= sequence[phase].time) {
         phase = (phase + 1) % sequence.length;
-        show(sequence[phase].panel);
+        show(sequence[phase].panel, true);
       } else if (active === 1) {
         setImage(Math.min(images.length - 1, Math.floor(elapsed / imageDuration)));
-      } else if (phase === 0 && elapsed >= sequence[phase].time - replayExit && !reduced.matches) {
+      } else if (phase === 0 && elapsed >= sequence[0].time - replayExitMs && !reduced.matches) {
         root.classList.add('is-replaying');
       }
       frame = requestAnimationFrame(tick);
     }
+
     function sync() {
-      root.classList.toggle('is-replaying', visible && !document.hidden && !reduced.matches && phase === 0 && elapsed >= sequence[0].time - replayExit);
+      if (!visible || document.hidden || reduced.matches) finishFusion();
+      root.classList.toggle('is-replaying', visible && !document.hidden && !reduced.matches && phase === 0 && elapsed >= sequence[0].time - replayExitMs);
       root.classList.toggle('is-in-view', visible && active === 0 && !reduced.matches && !document.hidden);
       root.classList.toggle('is-redline-in-view', visible && active === 1 && !reduced.matches && !document.hidden);
       if (frame) cancelAnimationFrame(frame);
       frame = 0; last = 0;
       if (visible && !document.hidden) frame = requestAnimationFrame(tick);
     }
-    function manualImage(i) { setImage(i); elapsed = slide * imageDuration; last = 0; }
+
+    function manualImage(i) {
+      setImage(i);
+      elapsed = Math.min(sequence[2].time - 200, slide * imageDuration);
+      last = 0;
+    }
     dots.forEach((dot, i) => dot.addEventListener('click', () => manualImage(i)));
-    root.querySelectorAll('[data-red-step]').forEach(btn => btn.addEventListener('click', () => manualImage(slide + Number(btn.dataset.redStep))));
+    root.querySelectorAll('[data-red-step]').forEach(btn =>
+      btn.addEventListener('click', () => manualImage(slide + Number(btn.dataset.redStep))));
+    let startX = null, startY = null;
+    if (gallery) {
+      gallery.addEventListener('touchstart', event => {
+        startX = event.changedTouches[0].clientX;
+        startY = event.changedTouches[0].clientY;
+      }, {passive: true});
+      gallery.addEventListener('touchend', event => {
+        if (startX === null) return;
+        const dx = event.changedTouches[0].clientX - startX;
+        const dy = event.changedTouches[0].clientY - startY;
+        if (active === 1 && Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy))
+          manualImage(slide + (dx < 0 ? 1 : -1));
+        startX = startY = null;
+      }, {passive: true});
+    }
     reduced.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
-    let startX = null, startY = null;
-    const gallery = root.querySelector('.redline-panel__gallery');
-    gallery.addEventListener('touchstart', e => { startX = e.changedTouches[0].clientX; startY = e.changedTouches[0].clientY; }, {passive:true});
-    gallery.addEventListener('touchend', e => {
-      if (startX === null) return;
-      const dx = e.changedTouches[0].clientX - startX, dy = e.changedTouches[0].clientY - startY;
-      if (active === 1 && Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) manualImage(slide + (dx < 0 ? 1 : -1));
-      startX = startY = null;
-    }, {passive:true});
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, {threshold:.12}).observe(root);
+      new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        sync();
+      }, {threshold: .12}).observe(root);
     } else visible = true;
-    show(0); sync();
+    show(0);
+    sync();
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPromoRotation, {once:true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPromoRotation, {once: true});
   else initPromoRotation();
 })();
