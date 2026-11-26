@@ -51,9 +51,10 @@
 <div aria-label="Carrusel de productos" class="carousel" id="carousel2"></div>
 </section>
 
-	<!-- Promo (entre carrusel y guía) -->
+	<!-- REF-NOVA-PROMO | Bloque rotativo de novedades (entre carrusel y guía). -->
 	<section class="promo-strip promo-rotation" aria-label="Novedades">
   <div class="promo-rotation__stage">
+    <!-- REF-NOVA-PROMO-01 | Panel Llevate 3 / AutoMix -->
     <div class="promo-rotation__panel promo-rotation__offer is-active" id="promo-llevate" aria-hidden="false">
       <div class="offer-creative" aria-label="Comprando cualquier AutoMix, llevate x3 AutoGranel gratis">
         <div class="offer-creative__atmosphere" aria-hidden="true">
@@ -77,11 +78,12 @@
         </div>
       </div>
     </div>
+    <!-- REF-NOVA-PROMO-02 | Panel Red Line 2027 -->
     <div class="promo-rotation__panel redline-panel" id="promo-redline" aria-hidden="true" inert>
       <div class="redline-panel__heading"><span>PRÓXIMAMENTE</span><strong>RED LINE</strong><span class="redline-panel__sub">2027</span></div>
       <div class="redline-panel__gallery" aria-label="Imágenes de Red Line">
         <img src="img/red-line/portada.webp" alt="Red Line AutoMix, portada" width="800" height="800" class="is-current" data-red-image="0" decoding="async"/>
-        <img src="img/red-line/logo.webp" alt="Identidad visual Red Line" width="554" height="554" data-red-image="1" decoding="async"/>
+        <img src="img/red-line/logo.webp" alt="Identidad visual Red Line" width="1254" height="1254" data-red-image="1" decoding="async"/>
         <img src="img/red-line/detalle.webp" alt="Detalle del envase Red Line" width="1024" height="1100" data-red-image="2" decoding="async"/>
       </div>
       <div class="redline-panel__nav" aria-label="Cambiar imagen">
@@ -92,6 +94,7 @@
         <button type="button" data-red-step="1" aria-label="Imagen siguiente">›</button>
       </div>
     </div>
+    <!-- REF-NOVA-PROMO | Transición compartida -->
     <div class="promo-rotation__wipe" aria-hidden="true"></div>
   </div>
 </section>
@@ -135,48 +138,122 @@
   </div>
 </section>
 
-<div class="section-divider" role="separator" aria-hidden="true"></div>
+<div class="section-divider shipping-spacer" aria-hidden="true"></div>
 
+<!-- REF-NOVA-ENVIOS: logos de transportistas y transición con camión. -->
 <section class="shipping-section" id="envios">
   <h2 class="shipping-title">Envíos</h2>
-  <div class="shipping-carriers">
-    <div class="shipping-carrier shipping-carrier--andreani">
-      <img class="shipping-img" src="img/andreani.png" alt="Andreani" loading="lazy" decoding="async" width="1458" height="485"/>
+  <div class="shipping-stage">
+    <div class="shipping-carriers">
+      <div class="shipping-carrier shipping-carrier--andreani">
+        <img class="shipping-img" src="img/andreani.png" alt="Andreani" loading="lazy" decoding="async" width="1458" height="485"/>
+      </div>
+      <div class="shipping-carrier shipping-carrier--correo">
+        <img class="shipping-img" src="img/correo-argentino.jpg" alt="Correo Argentino - Envíos a todo el país" loading="lazy" decoding="async" width="803" height="221"/>
+      </div>
     </div>
-    <div class="shipping-carrier shipping-carrier--correo">
-      <img class="shipping-img" src="img/correo-argentino.jpg" alt="Correo Argentino - Envíos a todo el país" loading="lazy" decoding="async" width="803" height="221"/>
+    <!-- REF-NOVA-ENVIOS-HUMO: dos estelas a la altura de las ruedas, con inercia horizontal. -->
+    <div class="shipping-smoke" aria-hidden="true">
+      <svg class="shipping-smoke-defs" width="0" height="0" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <defs>
+          <radialGradient id="shipping-smoke-soft">
+            <stop offset="0" stop-color="#dce0e3" stop-opacity=".62"/>
+            <stop offset=".48" stop-color="#b9bec4" stop-opacity=".43"/>
+            <stop offset="1" stop-color="#969ba0" stop-opacity="0"/>
+          </radialGradient>
+          <!-- Ruedas: cy=63, r=10. El humo nunca supera su diámetro. -->
+          <clipPath id="shipping-smoke-wheel-band" clipPathUnits="userSpaceOnUse">
+            <rect x="-148" y="53" width="444" height="20"/>
+          </clipPath>
+          <g id="shipping-smoke-cloud" fill="url(#shipping-smoke-soft)">
+            <ellipse cx="-8" cy="2" rx="11" ry="8"/>
+            <ellipse cx="-17" cy="1" rx="13" ry="7"/>
+            <ellipse cx="-26" cy="3" rx="11" ry="5.5"/>
+            <ellipse cx="-19" cy="-3" rx="8" ry="5"/>
+          </g>
+        </defs>
+      </svg>
+      <div class="shipping-smoke-track shipping-smoke-track--1">
+        <svg viewBox="0 0 148 80" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <g clip-path="url(#shipping-smoke-wheel-band)">
+            <g class="shipping-smoke-puff">
+              <use href="#shipping-smoke-cloud" x="73.5" y="63"/>
+              <use href="#shipping-smoke-cloud" x="119.5" y="63"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="shipping-smoke-track shipping-smoke-track--2">
+        <svg viewBox="0 0 148 80" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <g clip-path="url(#shipping-smoke-wheel-band)">
+            <g class="shipping-smoke-puff">
+              <use href="#shipping-smoke-cloud" x="69.5" y="63"/>
+              <use href="#shipping-smoke-cloud" x="115.5" y="63"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="shipping-smoke-track shipping-smoke-track--3">
+        <svg viewBox="0 0 148 80" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <g clip-path="url(#shipping-smoke-wheel-band)">
+            <g class="shipping-smoke-puff">
+              <use href="#shipping-smoke-cloud" x="64.5" y="63"/>
+              <use href="#shipping-smoke-cloud" x="110.5" y="63"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <!-- Silueta de camión rápido: modelo superior central de la referencia. -->
+    <div class="shipping-truck" aria-hidden="true">
+      <svg viewBox="0 0 148 80" xmlns="http://www.w3.org/2000/svg" fill="currentColor" focusable="false">
+        <path d="M16 17h53 M7 27h49 M20 37h39 M5 47h49 M25 57h31" stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M53 13h48a7 7 0 0 1 7 7v35H52V48H37a2.5 2.5 0 0 1 0-5h15v-7H29a2.5 2.5 0 0 1 0-5h23v-7H44a2.5 2.5 0 0 1 0-5h8z"/>
+        <path d="M108 25h13a7 7 0 0 1 5 3l13 15a6 6 0 0 1 2 4v15h-8a14 14 0 0 0-27 0H87a14 14 0 0 0-27 0h-9v-8h57zm5 5v14h20l-11-13a3 3 0 0 0-2-1z" fill-rule="evenodd"/>
+        <circle cx="73.5" cy="63" r="10"/><circle cx="119.5" cy="63" r="10"/>
+        <circle cx="73.5" cy="63" r="4" fill="#000"/><circle cx="119.5" cy="63" r="4" fill="#000"/>
+      </svg>
     </div>
   </div>
 </section>
 
-<div class="section-divider" role="separator" aria-hidden="true"></div>
+<div class="section-divider shipping-spacer" aria-hidden="true"></div>
 
+<!-- REF-NOVA-CONTACTO | Accesos de contacto sin tarjetas ni número visible. -->
 <section class="contact-section" id="contacto" aria-label="Contacto">
-  <div class="contact-card" role="list">
-    <a class="contact-row contact-row--phone" role="listitem" href="https://wa.me/5491158768929" target="_blank" rel="noopener" aria-label="WhatsApp +54 9 11 5876-8929">
-      <span class="contact-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M22 16.9v3.1a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.02 4.2 2 2 0 0 1 4 2h3.1a2 2 0 0 1 2 1.72c.12.86.32 1.7.6 2.5a2 2 0 0 1-.45 2.11L8.1 9.48a15.8 15.8 0 0 0 6.42 6.42l1.15-1.15a2 2 0 0 1 2.11-.45c.8.28 1.64.48 2.5.6A2 2 0 0 1 22 16.9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      <span class="contact-copy"><span class="contact-label">WhatsApp</span><span class="contact-text">+54 9 11 5876-8929</span></span>
-    </a>
-
-    <div class="contact-divider" role="separator" aria-hidden="true"></div>
-
-    <a class="contact-row" role="listitem" href="https://novaseeds-argentina.github.io/MixPack/" target="_blank" rel="noopener" aria-label="Sitio web NovaSeed-Argentina">
-      <span class="contact-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-          <path d="M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M12 3c3 3.5 3 14.5 0 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M12 3c-3 3.5-3 14.5 0 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="contact-copy contact-copy--web"><span class="contact-label">Sitio web</span><span class="contact-text">NovaSeed-Argentina</span></span>
-    </a>
-
-  </div>
+  <a class="contact-row contact-row--phone" href="https://wa.me/5491158768929" target="_blank" rel="noopener" aria-label="Iniciar conversación por WhatsApp (abre en otra pestaña)">
+    <span class="contact-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <path d="M3.4 17.8 1.9 22.1l4.5-1.4A10.5 10.5 0 1 0 3.4 17.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path fill="currentColor" transform="translate(5.2 4.8) scale(.59)" d="M6.62 10.79a15.46 15.46 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02z"/>
+      </svg>
+    </span>
+    <span class="contact-copy"><span class="contact-label">WhatsApp</span><span class="contact-text">Iniciar conversación</span></span>
+    <svg class="contact-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 18 18 6M8 6h10v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <div class="contact-divider" aria-hidden="true"></div>
+  <a class="contact-row" href="https://novaseeds-argentina.github.io/MixPack/" target="_blank" rel="noopener" aria-label="Visitar el sitio web NovaSeed - CABA (abre en otra pestaña)">
+    <span class="contact-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="contact-copy"><span class="contact-label">Sitio web</span><span class="contact-text">NovaSeed - CABA</span></span>
+    <svg class="contact-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 18 18 6M8 6h10v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <div class="contact-divider" aria-hidden="true"></div>
+  <!-- REF-NOVA-CONTACTO-ZONA-OESTE | Sin href hasta que exista el destino. Para activar: añadir href, target y rel si corresponde; quitar aria-disabled, role, tabindex y contact-row--inactive; actualizar aria-label. -->
+  <a class="contact-row contact-row--inactive" role="link" aria-disabled="true" tabindex="0" aria-label="NovaSeed - Zona Oeste (sitio web no disponible por el momento)">
+    <span class="contact-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="contact-copy"><span class="contact-label">Sitio web</span><span class="contact-text">NovaSeed - Zona Oeste</span></span>
+    <svg class="contact-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 18 18 6M8 6h10v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
 </section>
 
 <div class="section-divider" role="separator" aria-hidden="true"></div>
@@ -212,9 +289,15 @@
 
 <script defer="" src="js/app.js"></script>
 <script defer="" src="js/pwa.js"></script>
-<!-- WhatsApp Floating Button -->
+<!-- REF-NOVA-WHATSAPP-FLOAT | Botón flotante de WhatsApp: esquina inferior derecha, animación waToastStep3. -->
 <div class="wa-stack" aria-label="Accesos rápidos">
-<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/5491158768929?text=Hola%2C%20quisiera%20solicitar%20informaci%C3%B3n%20sobre%20sus%20productos%20y%20disponibilidad.%20%C2%A1Gracias%21" id="wa-fab" rel="noopener" target="_blank"></a>
+<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/5491158768929?text=Hola%2C%20quisiera%20solicitar%20informaci%C3%B3n%20sobre%20sus%20productos%20y%20disponibilidad.%20%C2%A1Gracias%21" id="wa-fab" rel="noopener" target="_blank">
+  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+    <path d="M3.4 17.8 1.9 22.1l4.5-1.4A10.5 10.5 0 1 0 3.4 17.8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="miter"/>
+    <path fill="currentColor" transform="translate(5.2 4.8) scale(.59)" d="M6.62 10.79a15.46 15.46 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02z"/>
+  </svg>
+  <span class="wa-fab__dot" aria-hidden="true"></span>
+</a>
 </div>
 </body>
 </html>
